@@ -1,47 +1,61 @@
-// thoughtText
+const { Schema, model, Types } = require('mongoose');
+const dateFormat = require('../utils/dateFormat');
 
-// String
-// Required
-// Must be between 1 and 280 characters
-// createdAt
+const ReactionSchema = new Schema(
+    {
+        reactionId: {
+            type: Schema.Types.ObjectId,
+            default: () => new Types.ObjectId()
+        },
+        reactionBody: {
+            type: String,
+            required: true,
+            minlength: 1,
+            maxlength: 280,
+        },
+        username: {
+            type: String,
+            required: true,
 
-// Date
-// Set default value to the current timestamp
-// Use a getter method to format the timestamp on query
-// username (The user that created this thought)
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+            get: createdatVal => dateFormat(createdatVal)
+        },
+    }
+);
 
-// String
-// Required
-// reactions (These are like replies)
+const ThoughtSchema = new Schema({
+    thoughtText: {
+        type: String,
+        required: true,
+        minlength: 1,
+        maxlength: 280,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        get: createdatVal => dateFormat(createdatVal)
+    },
+    username: {
+        type: String,
+        required: true,
+    },
+    reactions: [ReactionSchema]
+},
+    {
+        toJSON: {
+            getters: true,
+            virtuals: true
+        }
 
-// Array of nested documents created with the reactionSchema
-// Schema Settings
+    }
+);
 
-// Create a virtual called reactionCount that retrieves the length of the thought's reactions array field on query.
+ThoughtSchema.virtual('reactionCount').get(function () {
+    return this.reactions.length;
+});
 
-
-
-// Reaction (SCHEMA ONLY)
-
-// reactionId
-
-// Use Mongoose's ObjectId data type
-// Default value is set to a new ObjectId
-// reactionBody
-
-// String
-// Required
-// 280 character maximum
-// username
-
-// String
-// Required
-// createdAt
-
-// Date
-// Set default value to the current timestamp
-// Use a getter method to format the timestamp on query
-// Schema Settings
-
-// This will not be a model, but rather will be used as the reaction field's subdocument schema in the Thought model.
-
+const Thought = model('Thought', ThoughtSchema);
+module.exports = Thought;
