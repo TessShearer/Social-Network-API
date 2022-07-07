@@ -1,3 +1,14 @@
+const router = require('express').Router();
+const {
+    getAllThought,
+    getThoughtbyId,
+    addThought,
+    thoughtUpdate,
+    thoughtDelete,
+    addReaction,
+    removeReaction
+} = require('../../controllers/comment-controllers');
+
 // /api/thoughts
 
 // GET to get all thoughts

@@ -9,7 +9,7 @@ const userController = {
             //     path: 'thoughts',
             //     select: '-__v'
             // })
-            .select(-__V)
+            .select(-__v)
             .sort({ id: -1 })
             .then(dbUserData => res.json(dbUserData))
             .catch(err => {
@@ -52,6 +52,19 @@ const userController = {
             .catch(err => response.json(400).json(err));
     },
 
+    // PUT to update a user by their ID
+userUpdate({ params, body }, res) {
+    User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
+      .then(dbUserData => {
+        if (!dbUserData) {
+          res.status(404).json({ message: 'This user does not exist!' });
+          return;
+        }
+        res.json(dbUserData);
+      })
+      .catch(err => res.status(400).json(err));
+  },
+
     // DELETE a user by their ID
     userDelete({ params }, res) {
         User.findOneAndDelete({ _id: params.id })
@@ -69,3 +82,5 @@ const userController = {
 
     // DELETE to remove a friend from a user's friend list, /api/users/:userId/friends/:friendId
 };
+
+module.exports = userController;
