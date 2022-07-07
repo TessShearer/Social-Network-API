@@ -1,7 +1,7 @@
 // This file does not help with organization much now, but when the front end and additional routes folders like html routes are added, then this will help us streamline that
 
 const router = require('express').Router();
-const apiRoutes = require('./api');
+const apiRoutes = require('./api-routes.js');
 
 router.use('/api', apiRoutes);
 
