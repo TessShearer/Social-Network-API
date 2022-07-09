@@ -5,10 +5,6 @@ const userController = {
     // GET all Users
     getAllUser(req, res) {
         User.find({})
-            // .populate({
-            //     path: 'thoughts',
-            //     select: '-__v'
-            // })
             .select('-__v')
             .sort({ id: -1 })
             .then(dbUserData => res.json(dbUserData))
